@@ -221,6 +221,9 @@ return 1; }`,
 		{
 			"let bar = 10; foo",
 			"identifier not found: foo",
+		}, {
+			`"foo" - "bar"`,
+			"unknown operator: STRING - STRING",
 		},
 	}
 
@@ -311,6 +314,20 @@ func TestStringLiteral(t *testing.T) {
 	}
 
 	if str.Value != "Hello World!" {
+		t.Errorf("String has wrong value. got=%q", str.Value)
+	}
+}
+
+func TestStringConcatenation(t *testing.T) {
+	input := `"foo" + " bar"`
+
+	evaluated := testEval(input)
+	str, ok := evaluated.(*object.String)
+	if !ok {
+		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
+	}
+
+	if str.Value != "foo bar" {
 		t.Errorf("String has wrong value. got=%q", str.Value)
 	}
 }
